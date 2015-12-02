@@ -11,7 +11,7 @@ CONFIG_DIR = os.path.expanduser('~/.myRemote')
 IP = 'http://programmeerbazen.nl/ip.php' #Returns IP
 P_GET = 'get.php?M=' #Returns key if positive
 P_DATA = 'data.php?data=' #Inserts information
-P_BASE = 'https://myremote.io/panel/stub/' #Base URL, every url that needs this gets included (baseurl + var)
+P_BASE = 'https://website.com/stub/' #Base URL, every url that needs this gets included (baseurl + var)
 P_MESSAGE = 'msg.php?M=' #Check if there is a message availible (Url var)
 P_COMMAND = 'cmd.php?M=' #Gets the command from DB(Urls var)
 P_REGISTER = 'reg.php?K=' #Registers inserted key(Urls var)
@@ -53,4 +53,3 @@ def request():
 
 if __name__ == '__main__':
     request()
-
