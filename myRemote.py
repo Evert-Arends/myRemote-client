@@ -7,23 +7,29 @@ import urllib2
 import base64
 import sys
 
-CONFIG_DIR = os.path.expanduser('~/.myRemote') #Path where data is stored
-IP = 'http://programmeerbazen.nl/ip.php' #Returns IP
-P_GET = 'get.php?M=' #Returns key if positive
-P_DATA = 'data.php?data=' #Inserts information
-P_BASE = 'PATH_TO_API' #Base URL, every url that needs this gets included (baseurl + var)
-P_MESSAGE = 'msg.php?M=' #Check if there is a message availible (Url var)
-P_COMMAND = 'cmd.php?M=' #Gets the command from DB(Urls var)
-P_REGISTER = 'reg.php?K=' #Registers inserted key(Urls var)
-#Global most used vars
-G_OSNAME = platform.system() #Operating system's name
-G_PCNAME = platform.uname()[1] #Computername
-#Global functions
+CONFIG_DIR = os.path.expanduser('~/.myRemote') # Path where data is stored
+IP = 'http://programmeerbazen.nl/ip.php' # Returns IP
+P_GET = 'get.php?M=' # Returns key if positive
+P_DATA = 'data.php?data=' # Inserts information
+P_BASE = 'PATH_TO_API' # Base URL, every url that needs this gets included (baseurl + var)
+P_MESSAGE = 'msg.php?M=' # Check if there is a message availible (Url var)
+P_COMMAND = 'cmd.php?M=' # Gets the command from DB(Urls var)
+P_REGISTER = 'reg.php?K=' # Registers inserted key(Urls var)
+
+# Global most used vars
+
+G_OSNAME = platform.system() # Operating system's name
+G_PCNAME = platform.uname()[1] # Computername
+
+# Global functions
+
 try:
     from urllib.request import urlopen
 except ImportError:
     from urllib2 import urlopen
-#!Global functions
+
+# !Global functions
+
 def filecheck():
     if not os.path.exists(CONFIG_DIR):
         os.mkdir(CONFIG_DIR)
@@ -51,9 +57,13 @@ def request():
     print data
     s = urlopen(IP)
     pip = s.read()
-    #Encoding sData into a base64 string, so I can post spaces and weird characters.
+
+    # Encoding sData into a base64 string, so I can post spaces and weird characters.
+
     sData = base64.b64encode(data + ',' + G_PCNAME + ',' + G_OSNAME + ',' + pip)
-    #Request URL with a get parameter, which makes it easier to store the data on the serverself.
+
+    # Request URL with a get parameter, which makes it easier to store the data on the serverself.
+
     P_URL = '{0}{1}{2}'.format(P_BASE, P_DATA, sData)
     s = urlopen(P_URL)
     s = s.read()
