@@ -1,17 +1,26 @@
 #!/usr/bin/env python
 
-#File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
+# File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 import os, os.path
 import platform
 import urllib2
 import base64
 import sys
 
+# Getting and Sending data from/to the API
+
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
+
+# All Paths to use API
+
 CONFIG_DIR = os.path.expanduser('~/.myRemote') # Path where data is stored
 IP = 'http://programmeerbazen.nl/ip.php' # Returns IP
 P_GET = 'get.php?M=' # Returns key if positive
 P_DATA = 'data.php?data=' # Inserts information
-P_BASE = 'PATH_TO_API' # Base URL, every url that needs this gets included (baseurl + var)
+P_BASE = 'PATH_TO_API(https://website.com/stub/)' # Base URL, every url that needs this gets included (baseurl + var)
 P_MESSAGE = 'msg.php?M=' # Check if there is a message availible (Url var)
 P_COMMAND = 'cmd.php?M=' # Gets the command from DB(Urls var)
 P_REGISTER = 'reg.php?K=' # Registers inserted key(Urls var)
@@ -22,13 +31,6 @@ G_OSNAME = platform.system() # Operating system's name
 G_PCNAME = platform.uname()[1] # Computername
 
 # Global functions
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
-
-# !Global functions
 
 def filecheck():
     if not os.path.exists(CONFIG_DIR):
