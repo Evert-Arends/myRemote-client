@@ -2,6 +2,7 @@
 
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 import os, os.path
+import webbrowser
 import platform
 import urllib2
 import base64
@@ -20,7 +21,7 @@ CONFIG_DIR = os.path.expanduser('~/.myRemote') # Path where data is stored
 IP = 'http://programmeerbazen.nl/ip.php' # Returns IP
 P_GET = 'get.php?M=' # Returns key if positive
 P_DATA = 'data.php?data=' # Inserts information
-P_BASE = 'PATH_TO_API(https://example.org/stub/)' # Base URL, every url that needs this gets included (baseurl + var)
+P_BASE = 'https://example.com/API/' # Base URL, every url that needs this gets included (baseurl + var)
 P_MESSAGE = 'msg.php?M=' # Check if there is a message availible (Url var)
 P_COMMAND = 'cmd.php?M=' # Gets the command from DB(Urls var)
 P_REGISTER = 'reg.php?K=' # Registers inserted key(Urls var)
@@ -43,7 +44,7 @@ def filecheck():
         if len(key) == 0:
             print('Key is empty, please delete ~/.myRemote and try again')
             sys.exit(1)
-        request_me()
+        get_cmd()
     else:
         key = raw_input("Key?")
         open(key_file, 'w+').write(key)
@@ -70,20 +71,40 @@ def request():
     s = urlopen(P_URL)
     s = s.read()
     print(s)
-    request_me()
-def request_me():
+    get_cmd()
+
+def get_cmd():
     data = '{0}/user.kb'.format(CONFIG_DIR)
     f = open(data)
     key = f.readline()
     f.close()
     import threading
-    threading.Timer(5.0, request_me).start()
+    threading.Timer(2.0, get_cmd).start()
     c = urlopen(P_BASE + P_GET + key)
     str = c.read()
     if key in str:
         c = urlopen(P_BASE + P_MESSAGE + key)
         c = c.read()
         if "1" in c:
-            print('Het werkt :D :D :D')
+            cmd(P_BASE + P_COMMAND + key, "1")
+        elif "2" in c:
+            cmd(P_BASE + P_COMMAND + key, "2")
+
+# Requests the command from the API
+# code 1: Displays message in terminal
+# code 2: Opens an URL in your browser.
+
+def cmd( cmd_command, cmd_order ):
+    if cmd_command:
+        u = urlopen(cmd_command)
+        u = u.read()
+    if "1" in cmd_order:
+        print (u)
+    elif "2" in cmd_order:
+        url = u
+        webbrowser.open(url)
+        print (u)
+
+
 if __name__ == '__main__':
     filecheck()
