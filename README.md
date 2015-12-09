@@ -20,10 +20,10 @@ folder in a easy place to find. In this example I place it on the desktop.
  
 Next you open your Terminal (Linux or mac) or CMD (In windows), and browse to the 
 client file. 
-#here
+![](https://myremote.io/img/instruction1.png)
 If you are in the folder that contains the client file, type 'python myRemote.py'. 
 This will ask you for a key. 
-#here
+![](https://myremote.io/img/instruction2.png)
 Now you have to go to the website and click on the 'Generate key' button. In the table 
 under this button you can see a table with trerein all your devices. Now copy the key you 
 just registered, and paste it in the terminal. You have to paste it right behind the tekst that is already there. 
