@@ -28,6 +28,7 @@ This will ask you for a key.
 Now you have to go to the website and click on the 'Generate key' button. In the table 
 under this button you can see a table with trerein all your devices. Now copy the key you 
 just registered, and paste it in the terminal. You have to paste it right behind the tekst that is already there. 
+
 ![](https://myremote.io/scr/instruction6.png) 
 
 Now push enter and if there are no errors you get a message in your terminal 
