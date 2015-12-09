@@ -13,7 +13,7 @@ dashboard page you will see three things. Commands, Add/remove key and All devic
  
 All of this is still useless, if you haven't downloaded the Client. With this 
 Client you can register your devices. If you don't have the Client yet, click on 'Download', 
-and install the Client for your OS. 
+and choose the Client for your OS. 
  
 Now we can register a device. There are a few steps to do this. First place the client 
 folder in a easy place to find. In this example I place it on the desktop. 
