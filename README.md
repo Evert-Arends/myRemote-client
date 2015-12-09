@@ -34,6 +34,7 @@ just registered, and paste it in the terminal. You have to paste it right behind
 Now push enter and if there are no errors you get a message in your terminal 
 that says 'Registration successfully'. 
 ![](https://myremote.io/scr/instruction2.png)
+
 When you go back to the dashboard page and you refresh the page you van see your key is 
 registered and the device you activated is bound to the key. 
 It's possible to test this with the 'Command' area. Here you can see three fields and a button. 
