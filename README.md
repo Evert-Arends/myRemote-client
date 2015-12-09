@@ -21,6 +21,7 @@ folder in a easy place to find. In this example I place it on the desktop.
 Next you open your Terminal (Linux or mac) or CMD (In windows), and browse to the 
 client file. 
 ![](https://myremote.io/scr/instruction1.png)
+
 If you are in the folder that contains the client file, type 'python myRemote.py'. 
 This will ask you for a key. 
 ![](https://myremote.io/scr/instruction2.png)
