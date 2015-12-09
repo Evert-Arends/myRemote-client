@@ -56,7 +56,7 @@ active is 'Yes', otherwise it will say 'No'. If you register a device, make sure
 When you have registered devices and did some commands, you can see all your commands with the devices on tasks. 
 You can enter this page in the sidemenu, and on the page is a table where all your commands (tasks) and devices are.
 In this way it's easy to see what devices you are using and which tasks or commands are running.
-
+![](https://myremote.io/scr/total.png)
 #Disclaimer
 To use our product you'll need a key to create an account, if you want a key you can contact me.
 We hope our product fits you all!
