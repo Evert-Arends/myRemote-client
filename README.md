@@ -20,17 +20,17 @@ folder in a easy place to find. In this example I place it on the desktop.
  
 Next you open your Terminal (Linux or mac) or CMD (In windows), and browse to the 
 client file. 
-![](https://myremote.io/img/instruction1.png)
+![](https://myremote.io/scr/instruction1.png)
 If you are in the folder that contains the client file, type 'python myRemote.py'. 
 This will ask you for a key. 
-![](https://myremote.io/img/instruction2.png)
+![](https://myremote.io/scr/instruction2.png)
 Now you have to go to the website and click on the 'Generate key' button. In the table 
 under this button you can see a table with trerein all your devices. Now copy the key you 
 just registered, and paste it in the terminal. You have to paste it right behind the tekst that is already there. 
-![](https://myremote.io/img/instruction6.png) 
+![](https://myremote.io/scr/instruction6.png) 
 Now push enter and if there are no errors you get a message in your terminal 
 that says 'Registration successfully'. 
-![](https://myremote.io/img/instruction4.png)
+![](https://myremote.io/scr/instruction4.png)
 When you go back to the dashboard page and you refresh the page you van see your key is 
 registered and the device you activated is bound to the key. 
 It's possible to test this with the 'Command' area. Here you can see three fields and a button. 
@@ -43,7 +43,7 @@ Another thing that is important to know about the dashboard page is the 'Delete 
 You see a field with 'ID' in it. If you want to delete a key you have to insert this key in the field 
 and click on the Remove button. The button will be deleted immediately, so be sure you have deleted the key 
 that you wanted to delete. 
- ![](https://myremote.io/img/instruction8.png)
+ ![](https://myremote.io/scr/instruction8.png)
 The table on the page is not too hard. These are all the devices that are bount to your account. 
 There are two important columns, Status and Active. The status is exactly what is says. It checks whether 
 your devices are online or not. A device cannot be online if it's not activated. So al unregistered keys 
