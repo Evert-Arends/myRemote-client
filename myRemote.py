@@ -3,42 +3,27 @@
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 import os, os.path
 import webbrowser
-import platform
-import urllib2
 import base64
 import sys
+import threading
+import constants as cfg
+from commands import Commands
 
-# Getting and Sending data from/to the API
-
-try:
+if cfg.PY_VERSION == 3:
+    from urllib import urlopen
+    raw_input = input
+elif cfg.PY_VERSION == 2:
     from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
+    from __future__ import print_function
 
-# All Paths to use API
-
-CONFIG_DIR = os.path.expanduser('~/.myRemote') # Path where data is stored
-IP = 'http://programmeerbazen.nl/ip.php' # Returns IP
-P_GET = 'get.php?M=' # Returns key if positive
-P_DATA = 'data.php?data=' # Inserts information
-P_BASE = 'https://example.com/API/' # Base URL, every url that needs this gets included (baseurl + var)
-P_MESSAGE = 'msg.php?M=' # Check if there is a message availible (Url var)
-P_COMMAND = 'cmd.php?M=' # Gets the command from DB(Urls var)
-P_REGISTER = 'reg.php?K=' # Registers inserted key(Urls var)
-
-# Global most used vars
-
-G_OSNAME = platform.system() # Operating system's name
-G_PCNAME = platform.uname()[1] # Computername
 
 # Global functions
-
 def filecheck():
-    if not os.path.exists(CONFIG_DIR):
-        os.mkdir(CONFIG_DIR)
-        print('Created {0}'.format(CONFIG_DIR))
+    if not os.path.exists(cfg.CONFIG_DIR):
+        os.mkdir(cfg.CONFIG_DIR)
+        print('Created {0}'.format(cfg.CONFIG_DIR))
 
-    key_file = '{0}/user.kb'.format(CONFIG_DIR)
+    key_file = '{0}/user.kb'.format(cfg.CONFIG_DIR)
     if os.path.exists(key_file):
         key = open(key_file, 'r').read()
         if len(key) == 0:
@@ -48,62 +33,68 @@ def filecheck():
     else:
         key = raw_input("Key?")
         open(key_file, 'w+').write(key)
-        url = '{0}{1}{2}'.format(P_BASE, P_REGISTER, key)
+        url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, key)
         s = urlopen(url)
         request()
         print('Succesvol geregistreerd. (32 - 44)')
+
+
 def request():
-    key = '{0}/user.kb'.format(CONFIG_DIR)
+    key = '{0}/user.kb'.format(cfg.CONFIG_DIR)
     f = open(key)
     data = f.readline()
     f.close()
-    print data
-    s = urlopen(IP)
+    print(data)
+    s = urlopen(cfg.MY_IP)
     pip = s.read()
 
     # Encoding sData into a base64 string, so I can post spaces and weird characters.
-
-    sData = base64.b64encode(data + ',' + G_PCNAME + ',' + G_OSNAME + ',' + pip)
+    sData = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
 
     # Request URL with a get parameter, which makes it easier to store the data on the serverself.
+    P_URL = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sData)
+    s = urlopen(P_URL).read()
 
-    P_URL = '{0}{1}{2}'.format(P_BASE, P_DATA, sData)
-    s = urlopen(P_URL)
-    s = s.read()
     print(s)
     get_cmd()
 
+def parse_cmd(inp, key):
+    """
+    This function validates the data we received from the API
+    and delegates the appropriate responses to that data.
+    """
+
+    # First check if inp can be parsed as an integer
+    try:
+        int(inp)
+    except:
+        print('Input was not an integer :)')
+        return
+
+    # check if we recieved a valid command
+    if not cfg.P_COMMAND:
+        print('bleh')
+        return
+
+    commands = Commands()
+
+    if inp == 1:
+        commands.system_cmd(cfg.P_BASE + cfg.P_COMMAND + key)
+    elif inp == 2:
+        commands.open_webbrowser(cfg.P_BASE + cfg.P_COMMAND + key)
+
 def get_cmd():
-    data = '{0}/user.kb'.format(CONFIG_DIR)
-    f = open(data)
-    key = f.readline()
-    f.close()
-    import threading
+    data = '{0}/user.kb'.format(cfg.CONFIG_DIR)
+    key = open(data, 'r').readline().strip()
+
     threading.Timer(2.0, get_cmd).start()
-    c = urlopen(P_BASE + P_GET + key)
-    str = c.read()
+    content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
+    str = content.read()
+
     if key in str:
-        c = urlopen(P_BASE + P_MESSAGE + key)
-        c = c.read()
-        if "1" in c:
-            cmd(P_BASE + P_COMMAND + key, "1")
-        elif "2" in c:
-            cmd(P_BASE + P_COMMAND + key, "2")
+        content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_MESSAGE, key)).read().strip()
 
-# Requests the command from the API
-# code 1: Displays message in terminal
-# code 2: Opens an URL in your browser.
-
-def cmd( cmd_command, cmd_order ):
-    if cmd_command:
-        u = urlopen(cmd_command)
-        u = u.read()
-    if "1" in cmd_order:
-        print (u)
-    elif "2" in cmd_order:
-        url = u
-        webbrowser.open(url)
-        print (u)
+        parse_cmd(content, key)
 
 
 if __name__ == '__main__':
