@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
+#Ik ben van plan om alles in base64 te veranderen. Ook de key die in de .kb gaat.
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
+from __future__ import print_function
 import os, os.path
 import webbrowser
 import base64
@@ -10,11 +11,10 @@ import constants as cfg
 from commands import Commands
 
 if cfg.PY_VERSION == 3:
-    from urllib import urlopen
+    from urllib2 import urlopen
     raw_input = input
 elif cfg.PY_VERSION == 2:
-    from urllib.request import urlopen
-    from __future__ import print_function
+    from urllib import urlopen
 
 
 # Global functions
@@ -27,19 +27,30 @@ def filecheck():
     if os.path.exists(key_file):
         key = open(key_file, 'r').read()
         if len(key) == 0:
-            print('Key is empty, please delete ~/.myRemote and try again')
+            print('Keyfile is empty, please delete ~/.myRemote and try again')
             sys.exit(1)
         get_cmd()
     else:
-        key = raw_input("Key?")
-        open(key_file, 'w+').write(key)
-        url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, key)
+        key = raw_input('Authentication Key?')
+        API = raw_input('API key?')
+        parameter = base64.b64encode(API +',' + key)
+        open(key_file, 'w+').write(parameter)
+        url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, parameter)
         s = urlopen(url)
-        request()
-        print('Succesvol geregistreerd. (32 - 44)')
+        s = s.read()
+        if "set" in s:
+            print ('Registration successful.')
+            request()
+        else:
+            print('There could\'ve bin a misunderstanding. myRemote can be buggy from here..')
+            print (s)
 
 
 def request():
+    """
+        Requests data from the server, it gets the base64 encoded string from a file.
+        This string contains API and KEY authentication.
+    """
     key = '{0}/user.kb'.format(cfg.CONFIG_DIR)
     f = open(key)
     data = f.readline()
@@ -49,12 +60,13 @@ def request():
     pip = s.read()
 
     # Encoding sData into a base64 string, so I can post spaces and weird characters.
-    sData = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
-
+    data = base64.b64decode(data) #decode they key, so its not double encoded.
+    str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
+    sData = str
+    print("sData = " + sData)
     # Request URL with a get parameter, which makes it easier to store the data on the serverself.
     P_URL = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sData)
     s = urlopen(P_URL).read()
-
     print(s)
     get_cmd()
 
@@ -67,33 +79,35 @@ def parse_cmd(inp, key):
     # First check if inp can be parsed as an integer
     try:
         int(inp)
+        print(inp)
     except:
         print('Input was not an integer :)')
         return
 
-    # check if we recieved a valid command
-    if not cfg.P_COMMAND:
-        print('bleh')
-        return
-
     commands = Commands()
 
-    if inp == 1:
-        commands.system_cmd(cfg.P_BASE + cfg.P_COMMAND + key)
-    elif inp == 2:
-        commands.open_webbrowser(cfg.P_BASE + cfg.P_COMMAND + key)
+    if inp == '1':
+        print('input 1')
+        message = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
+        message = message.read().strip()
+        commands.system_cmd(message)
+    elif inp == '2':
+        url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
+        url_to_open = url_to_open.read().strip()
+        commands.open_webbrowser(url_to_open)
+    elif inp == '3':
+        url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
+        commands.take_screenshot()
 
 def get_cmd():
     data = '{0}/user.kb'.format(cfg.CONFIG_DIR)
     key = open(data, 'r').readline().strip()
-
     threading.Timer(2.0, get_cmd).start()
     content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
-    str = content.read()
-
-    if key in str:
+    str = content.read().strip()
+    if key == str:
         content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_MESSAGE, key)).read().strip()
-
+        print('Key is in str', content)
         parse_cmd(content, key)
 
 
