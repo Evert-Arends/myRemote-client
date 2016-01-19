@@ -76,11 +76,14 @@ class Commands():
 
 
     def upload_image(self):
+        key_file = '{0}/user.kb'.format(cfg.CONFIG_DIR)
         encoded_string_file = '{0}/img.kb'.format(cfg.CONFIG_DIR)
         data = open(encoded_string_file, 'r').readline()
+        key = open(key_file, 'r').read()
+        print('key = {0}').format(key)
         sleep(0.50)
         print(data)
-        userdata = {'base64_str': data}
+        userdata = {'M':key, 'base64_str': data}
         resp = requests.post('%s%s'% (cfg.P_BASE, cfg.P_UPLOAD), data=userdata)
         print(resp.status_code)
         print('send')
