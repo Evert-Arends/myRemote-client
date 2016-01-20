@@ -22,10 +22,6 @@ class Commands():
         webbrowser.open(url)
         print(url)
 
-    def test(self):
-        with open("zijn.png", "rb") as image_file:
-            encoded_string = base64.b64encode(image_file.read())
-            print encoded_string
 
     def take_screenshot(self):
         print(cfg.G_OSNAME)
