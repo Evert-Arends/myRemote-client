@@ -43,7 +43,7 @@ class Commands():
             if (pb != None):
                 pb.save(filename,"png")
                 print "Screenshot saved to "+filename
-                sleep(0.50)
+                sleep(0.20)
                 self.encode_image()
             else:
                 print "Unable to get the screenshot."
@@ -57,18 +57,18 @@ class Commands():
             mem.SelectObject(wx.NullBitmap)
             bmp.SaveFile('screenshot.png', wx.BITMAP_TYPE_JPEG)
             print('Bitmap saved')
-            sleep(0.50)
+            sleep(0.10)
             self.encode_image()
 
 
     def encode_image(self):
-        with open("tux.png", "rb") as image_file:
+        with open("screenshot.png", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
             full_encoded_string = "data:image/png;base64,{0}".format(encoded_string)
         encoded_string_file = '{0}/img.kb'.format(cfg.CONFIG_DIR)
         try:
             open(encoded_string_file, 'w+').write(full_encoded_string)
-            sleep(0.50)
+            sleep(0.10)
             print('Saved succesfully.')
             self.upload_image()
         except:
@@ -81,8 +81,7 @@ class Commands():
         data = open(encoded_string_file, 'r').readline()
         key = open(key_file, 'r').read()
         print('key = {0}').format(key)
-        sleep(0.50)
-        print(data)
+        sleep(0.10)
         userdata = {'M':key, 'base64_str': data}
         resp = requests.post('%s%s'% (cfg.P_BASE, cfg.P_UPLOAD), data=userdata)
         print(resp.status_code)
