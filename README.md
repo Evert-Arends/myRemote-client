@@ -1,5 +1,5 @@
 #What is myRemote?
-myRemote is a free and open source tool to connect you to all your devices from a simple webinterface, which you can access anywhere, anytime. Take screenshots of your desktop, execute a range of useful scripts we made for you [FIXME: give some examples here], or create your own custom scripts if you want more freedom to do anything you want. 
+myRemote is a free and open source tool to connect you to all your devices from a simple webinterface, which you can access anywhere, anytime. Take screenshots of your desktop, execute a range of useful scripts we made for you, or create your own custom scripts if you want more freedom to do anything you want. 
 
 #Isn't controlling all my devices from a website really unsafe? Why should i trust you?
 Controlling your devices over the web is always dangerous. Therefor myRemote uses a secure connection from client to server. This is also known as TLS, and it gets your traffic safely to the other side. 
