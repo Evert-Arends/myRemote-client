@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#Ik ben van plan om alles in base64 te veranderen. Ook de key die in de .kb gaat.
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 from __future__ import print_function
 import os, os.path
@@ -33,7 +32,7 @@ def filecheck():
     else:
         key = raw_input('Authentication Key?')
         API = raw_input('API key?')
-        parameter = base64.b64encode(API +',' + key)
+        parameter = base64.b64encode(API + ',' + key)
         open(key_file, 'w+').write(parameter)
         url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, parameter)
         s = urlopen(url)
@@ -56,11 +55,12 @@ def request():
     data = f.readline()
     f.close()
     print(data)
-    s = urlopen(cfg.MY_IP)
-    pip = s.read()
-
+    # s = urlopen(cfg.MY_IP)
+    # pip = s.read()
+    pip = cfg.MY_IP
     # Encoding sData into a base64 string, so I can post spaces and weird characters.
-    data = base64.b64decode(data) #decode they key, so its not double encoded.
+    # decode they key, so its not double encoded.
+    data = base64.b64decode(data)
     str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
     sData = str
     print("sData = " + sData)
