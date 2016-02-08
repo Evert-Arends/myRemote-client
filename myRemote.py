@@ -32,7 +32,7 @@ def filecheck():
     else:
         key = raw_input('Authentication Key?')
         API = raw_input('API key?')
-        parameter = base64.b64encode(API +',' + key)
+        parameter = base64.b64encode(API + ',' + key)
         open(key_file, 'w+').write(parameter)
         url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, parameter)
         s = urlopen(url)
@@ -59,7 +59,8 @@ def request():
     # pip = s.read()
     pip = cfg.MY_IP
     # Encoding sData into a base64 string, so I can post spaces and weird characters.
-    data = base64.b64decode(data) #decode they key, so its not double encoded.
+    # decode they key, so its not double encoded.
+    data = base64.b64decode(data)
     str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
     sData = str
     print("sData = " + sData)
