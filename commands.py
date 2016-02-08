@@ -1,7 +1,6 @@
 from time import sleep
 import webbrowser
 import requests
-import gtk.gdk
 import wx
 import base64
 import constants as cfg
@@ -26,6 +25,7 @@ class Commands():
     def take_screenshot(self):
         print(cfg.G_OSNAME)
         if cfg.G_OSNAME == "Linux" or cfg.G_OSNAME == "Linux2":
+            import gtk.gdk
             print('Screenshot requested.')
             w = gtk.gdk.get_default_root_window()
             sz = w.get_size()
