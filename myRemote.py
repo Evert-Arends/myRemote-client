@@ -43,6 +43,7 @@ def filecheck():
         else:
             print('There could\'ve bin a misunderstanding. myRemote can be buggy from here..')
             print (s)
+            print(s)
 
 
 def request():
