@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
+
+# Imports
 from __future__ import print_function
-import os, os.path
-import webbrowser
+import os
+import os.path
 import base64
 import sys
 import threading
 import constants as cfg
+import method as mtd
 from commands import Commands
 
+# defining used python version.
 if cfg.PY_VERSION == 3:
     from urllib2 import urlopen
     raw_input = input
@@ -21,19 +25,17 @@ def filecheck():
     if not os.path.exists(cfg.CONFIG_DIR):
         os.mkdir(cfg.CONFIG_DIR)
         print('Created {0}'.format(cfg.CONFIG_DIR))
-
-    key_file = '{0}/user.kb'.format(cfg.CONFIG_DIR)
-    if os.path.exists(key_file):
-        key = open(key_file, 'r').read()
-        if len(key) == 0:
-            print('Keyfile is empty, please delete ~/.myRemote and try again')
-            sys.exit(1)
-        get_cmd()
-    else:
+    key_file = mtd.get_key_info()
+    print ("Keyfile:", key_file)
+    if key_file == 0:
+        if key_file == 0:
+            print('key file seems to be empty, please delete ~/.myRemote and try again')
+            sys.exit()
+    elif key_file == "None":
         key = raw_input('Authentication Key?')
-        API = raw_input('API key?')
-        parameter = base64.b64encode(API + ',' + key)
-        open(key_file, 'w+').write(parameter)
+        api = raw_input('API key?')
+        parameter = base64.b64encode(api + ',' + key)
+        open(cfg.KEY_FILE, 'w+').write(parameter)
         url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, parameter)
         s = urlopen(url)
         s = s.read()
@@ -42,8 +44,8 @@ def filecheck():
             request()
         else:
             print('There could\'ve bin a misunderstanding. myRemote can be buggy from here..')
-            print (s)
-            print(s)
+    else:
+        get_cmd()
 
 
 def request():
@@ -51,23 +53,18 @@ def request():
         Requests data from the server, it gets the base64 encoded string from a file.
         This string contains API and KEY authentication.
     """
-    key = '{0}/user.kb'.format(cfg.CONFIG_DIR)
-    f = open(key)
-    data = f.readline()
-    f.close()
-    print(data)
+    data = mtd.get_key_info()
     # s = urlopen(cfg.MY_IP)
     # pip = s.read()
     pip = cfg.MY_IP
-    # Encoding sData into a base64 string, so I can post spaces and weird characters.
+    # Encoding sdata into a base64 string, so I can post spaces and weird characters.
     # decode they key, so its not double encoded.
     data = base64.b64decode(data)
-    str = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
-    sData = str
-    print("sData = " + sData)
+    sdata = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
+    print("sdata = " + sdata)
     # Request URL with a get parameter, which makes it easier to store the data on the server self.
-    P_URL = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sData)
-    s = urlopen(P_URL).read()
+    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sdata)
+    s = urlopen(full_url).read()
     print(s)
     get_cmd()
 
@@ -101,10 +98,12 @@ def parse_cmd(inp, key):
         url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
         commands.take_screenshot()
 
+
 def get_cmd():
-    data = '{0}/user.kb'.format(cfg.CONFIG_DIR)
-    key = open(data, 'r').readline().strip()
+    cfg.COUNT += 1
+    key = mtd.get_key_info()
     threading.Timer(2.0, get_cmd).start()
+    print ("Request: #", cfg.COUNT)
     content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
     str = content.read().strip()
     if key == str:
