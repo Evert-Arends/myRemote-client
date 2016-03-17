@@ -7,7 +7,6 @@ import myRemote as mrt
 # defining used python version.
 if cfg.PY_VERSION == 3:
     from urllib2 import urlopen
-    raw_input = input
 elif cfg.PY_VERSION == 2:
     from urllib import urlopen
 
