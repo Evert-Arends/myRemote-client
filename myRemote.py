@@ -29,7 +29,6 @@ def filecheck():
     key_file = mtd.get_key_info()
     print("Keyfile:", key_file)
     if key_file == 0:
-        if key_file == 0:
             mtd.register_client()
     elif key_file == "None":
         print('key file seems to be empty, please delete ~/.myRemote and try again')
@@ -49,11 +48,11 @@ def request():
     # The Encoded data in a base64 string, so I can post spaces and weird characters.
     # Decode they key, so its not double encoded.
     data = base64.b64decode(data)
-    server_data = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + client_ip)
+    post_data = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + client_ip)
 
-    print("server data = " + server_data)
+    print("server data = " + post_data)
     # Request URL with a get parameter, which makes it easier to store the data on the server self.
-    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, server_data)
+    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, post_data)
     s = urlopen(full_url).read()
     print(s)
 
