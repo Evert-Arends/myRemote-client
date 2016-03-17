@@ -42,6 +42,14 @@ def register_client():
         print('There could\'ve bin a misunderstanding. myRemote can be buggy from here..')
 
 
+def error_logging(error):
+    if os.path.exists(cfg.ERROR_LOG):
+        error = (error + "\n")
+        open(cfg.ERROR_LOG, 'a').write(error)  # Write to existing error log.
+    else:
+        open(cfg.ERROR_LOG, 'w+').write(error)  # Create new error log.
+
+
 def get_client_ip():
     url = 'https://myremote.io/user/ip.php'
     s = urlopen(url)

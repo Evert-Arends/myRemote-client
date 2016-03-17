@@ -64,7 +64,7 @@ class Commands():
             open(encoded_string_file, 'w+').write(full_encoded_string)
             sleep(0.10)
             print(full_encoded_string)
-            print('Saved succesfully.')
+            print('Saved successfully.')
             self.upload_image()
         except:
             print('pr0bz brother.. No base64 image string for you :3')
@@ -74,7 +74,7 @@ class Commands():
         encoded_string_file = '{0}/img.kb'.format(cfg.CONFIG_DIR)
         data = open(encoded_string_file, 'r').readline()
         key = open(key_file, 'r').read()
-        print('key = {0}').format(key)
+        print 'key = {0}'.format(key)
         sleep(0.10)
         userdata = {'M': key, 'base64_str': data}
         resp = requests.post('%s%s' % (cfg.P_BASE, cfg.P_UPLOAD), data=userdata)

