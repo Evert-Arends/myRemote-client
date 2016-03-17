@@ -1,7 +1,6 @@
 from time import sleep
 import webbrowser
 import requests
-import wx
 import base64
 import constants as cfg
 
@@ -43,6 +42,7 @@ class Commands():
             else:
                 print "Unable to get the screenshot."
         else:
+            import wx
             wx.App()  # Need to create an App instance before doing anything
             screen = wx.ScreenDC()
             size = screen.GetSize()

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
 
-# Imports
 from __future__ import print_function
 import os
 import os.path
@@ -26,24 +25,13 @@ def filecheck():
         os.mkdir(cfg.CONFIG_DIR)
         print('Created {0}'.format(cfg.CONFIG_DIR))
     key_file = mtd.get_key_info()
-    print ("Keyfile:", key_file)
+    print("Keyfile:", key_file)
     if key_file == 0:
         if key_file == 0:
-            print('key file seems to be empty, please delete ~/.myRemote and try again')
-            sys.exit()
+            mtd.register_client()
     elif key_file == "None":
-        key = raw_input('Authentication Key?')
-        api = raw_input('API key?')
-        parameter = base64.b64encode(api + ',' + key)
-        open(cfg.KEY_FILE, 'w+').write(parameter)
-        url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_REGISTER, parameter)
-        s = urlopen(url)
-        s = s.read()
-        if "set" in s:
-            print ('Registration successful.')
-            request()
-        else:
-            print('There could\'ve bin a misunderstanding. myRemote can be buggy from here..')
+        print('key file seems to be empty, please delete ~/.myRemote and try again')
+        sys.exit()
     else:
         get_cmd()
 
@@ -54,18 +42,20 @@ def request():
         This string contains API and KEY authentication.
     """
     data = mtd.get_key_info()
-    # s = urlopen(cfg.MY_IP)
-    # pip = s.read()
-    pip = cfg.MY_IP
-    # Encoding sdata into a base64 string, so I can post spaces and weird characters.
-    # decode they key, so its not double encoded.
+    client_ip = mtd.get_client_ip()
+
+    # The Encoded data in a base64 string, so I can post spaces and weird characters.
+    # Decode they key, so its not double encoded.
     data = base64.b64decode(data)
-    sdata = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + pip)
-    print("sdata = " + sdata)
+    server_data = base64.b64encode(data + ',' + cfg.G_PCNAME + ',' + cfg.G_OSNAME + ',' + client_ip)
+
+    print("server data = " + server_data)
     # Request URL with a get parameter, which makes it easier to store the data on the server self.
-    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, sdata)
+    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, server_data)
     s = urlopen(full_url).read()
     print(s)
+
+    # Starting loop to get a server reply.
     get_cmd()
 
 
@@ -102,7 +92,7 @@ def parse_cmd(inp, key):
 def get_cmd():
     cfg.COUNT += 1
     key = mtd.get_key_info()
-    threading.Timer(2.0, get_cmd).start()
+    threading.Timer(cfg.INTERVAL, get_cmd).start()
     print ("Request: #", cfg.COUNT)
     content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
     str = content.read().strip()
