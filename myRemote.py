@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# File written by Evert Arends, all rights reserverd. First run: Thursday November 26 in 2015 around 3 PM.#
+# File written by Evert Arends, all rights reserved. First run: Thursday November 26 in 2015 around 3 PM.#
 
 from __future__ import print_function
 import os
@@ -89,6 +89,9 @@ def parse_cmd(inp, key):
 
 
 def get_cmd():
+    """
+        Requests data from server, and checks if there is a result
+    """
     cfg.COUNT += 1  # Count the total requests this session.
     key = mtd.get_key_info()
 
@@ -97,7 +100,7 @@ def get_cmd():
     logging = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " Request: #" + str(cfg.COUNT) +
                " With a set interval of: " + str(cfg.INTERVAL))  # Sets string for logbook.
     print(logging)  # To see the result in the terminal.
-    mtd.error_logging(logging)  # Function to put data into the log.
+    mtd.error_logging(logging)  # Writing to log file.
 
     content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
     imported_content = content.read().strip()
