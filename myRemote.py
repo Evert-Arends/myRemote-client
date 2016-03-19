@@ -8,9 +8,11 @@ import base64
 import os.path
 import datetime
 import threading
+
 import method as mtd
 import constants as cfg
 from commands import Commands
+from bin.screenshot import Screenshot
 
 # defining used python version.
 if cfg.PY_VERSION == 3:
@@ -24,12 +26,12 @@ def filecheck():
     if not os.path.exists(cfg.CONFIG_DIR):
         os.mkdir(cfg.CONFIG_DIR)
         print('Created {0}'.format(cfg.CONFIG_DIR))
+
     key_file = mtd.get_key_info()
     print("Keyfile:", key_file)
-    if key_file == 0:
-            mtd.register_client()
-    elif key_file == "None":
-        print('key file seems to be empty, please delete ~/.myRemote and try again')
+
+    if not key_file:
+        mtd.register_client()
         sys.exit()
     else:
         get_cmd()
@@ -85,7 +87,9 @@ def parse_cmd(inp, key):
         commands.open_webbrowser(url_to_open)
     elif inp == '3':
         url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
-        commands.take_screenshot()
+
+        screenshot = Screenshot()
+        screenshot.snap()
 
 
 def get_cmd():

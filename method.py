@@ -16,14 +16,17 @@ def get_key_info():
     """
     :rtype: basestring
     """
-    if os.path.exists(cfg.KEY_FILE):
-        key = open(cfg.KEY_FILE, 'r').read()
-        if len(key) == 0:
-            return "None"
-        else:
-            return key
+    if not os.path.exists(cfg.KEY_FILE):
+        return
+
+    key = open(cfg.KEY_FILE, 'r').read()
+    if len(key) == 0:
+        # @TODO: Delete folder directly, ask user to register the client again.
+        print('key file seems to be empty, please delete ~/.myRemote and try again')
+
+        return
     else:
-        return 0
+        return key
 
 
 def register_client():

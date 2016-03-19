@@ -1,0 +1,3 @@
+Meerdere classes, met specifieke inhoud.
+Commi class maken.
+Op de server "data:image/png;base64," voor het wegschrijven van de base64 string (gebruik img)
