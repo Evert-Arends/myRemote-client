@@ -2,11 +2,13 @@ import re
 from time import sleep
 import requests
 import base64
-import constants as cfg
 from StringIO import StringIO
 
-#from method import get_key_info
+import constants as cfg
+
+# from method import get_key_info
 import method
+from bin.communication import Communication
 
 
 class Screenshot():
@@ -26,8 +28,8 @@ class Screenshot():
 
         if not encoded:
             raise Exception('Screenshot failed: could not encode')
-
-        self.upload(encoded)
+        communication = Communication()
+        communication.upload(encoded)
 
     def _snap_linux(self):
         from gtk import gdk
@@ -74,26 +76,6 @@ class Screenshot():
 
     def encodeb64(self, buffer):
         encoded = base64.b64encode(buffer.read())
-        encoded = ("data:image/png;base64,{0}").format(encoded)
+        encoded = "data:image/png;base64,{0}".format(encoded)
 
         return encoded
-
-    def upload(self, b64encoded):
-        key = method.get_key_info()
-
-        if not isinstance(b64encoded, (str, unicode)):
-            raise Exception('We can only send b64 strings!')
-
-        userdata = {'M': key, 'base64_str': b64encoded}
-
-        print('sending')
-
-        try:
-            resp = requests.post('%s%s' % (cfg.P_BASE, cfg.P_UPLOAD), data=userdata)
-
-            if not resp.status_code == 200:
-                raise Exception('status code not 200')
-        except Exception as ex:
-            print 'upload failed: %s' % str(ex)
-
-        print('sent')
