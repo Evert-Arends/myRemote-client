@@ -54,8 +54,7 @@ def request():
 
     print("server data = " + post_data)
     # Request URL with a get parameter, which makes it easier to store the data on the server self.
-    full_url = '{0}{1}{2}'.format(cfg.P_BASE, cfg.P_DATA, post_data)
-    s = urlopen(full_url).read()
+    s = communication.getdata(cfg.P_BASE, cfg.P_DATA, post_data)
     print(s)
 
     # Starting loop to get a server reply.
